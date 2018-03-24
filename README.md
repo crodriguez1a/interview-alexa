@@ -1,6 +1,6 @@
 # [WIP] interview-alexa
 
-A Python testing framework for Alexa using `ask-cli`
+A Python Testing Framework for Alexa using ASK CLI
 
 TODO [Pipify](http://the-hitchhikers-guide-to-packaging.readthedocs.io/en/latest/creation.html)
 
@@ -59,6 +59,17 @@ class TestingAllTheThings(unittest.TestCase):
 if __name__ == '__main__':
     unittest.main()
 ```
+
+Options:
+
+```
+  @test_utterance('open my skill', debug=True)
+    def test_launch_intent(self, result):
+        self.assertEqual(result, "My expected result")
+        # => verbose output
+
+```
+
 
 From the command line:
 
