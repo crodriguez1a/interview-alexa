@@ -1,6 +1,6 @@
 # [WIP] interview-alexa
 
-A Python Testing Framework for Alexa using ASK CLI
+A Python testing framework for Alexa using `ask-cli`
 
 TODO [Pipify](http://the-hitchhikers-guide-to-packaging.readthedocs.io/en/latest/creation.html)
 
@@ -44,6 +44,8 @@ project
 	└───tests.py
 ```
 
+**Writing Tests:**
+
 ```
 import unittest
 from interview-alexa import test_utterance
@@ -60,10 +62,12 @@ if __name__ == '__main__':
     unittest.main()
 ```
 
-Options:
+**Options:**
+
+- **`debug=True`**
 
 ```
-  @test_utterance('open my skill', debug=True)
+  	@test_utterance('open my skill', debug=True)
     def test_launch_intent(self, result):
         self.assertEqual(result, "My expected result")
         # => verbose output
@@ -71,13 +75,13 @@ Options:
 ```
 
 
-From the command line:
+**Simple Testing**:
 
 ```
 cd My_Skill
 python tests.py
 ```
-Should result in something like:
+A passing test would output something like:
 
 ```
 ✓ Simulation created for simulation id: 1234-5679-910112-abc-123
@@ -86,4 +90,22 @@ Should result in something like:
 Ran 1 test in 5.848s
 
 OK
+```
+
+**Dialog Testings**
+
+Since the Python test runner executes tests alphabetical by test name, you'll want to ensure that any utterances in a dialog having an alphabetical naming convention.
+
+```
+@test_utterance('open my skill', debug=True)
+def test_a_begin_dialog(self, result):
+		self.assertEqual(result, "My expected result")
+		# => verbose output
+```
+
+```
+@test_utterance('do something with my skill', debug=True)
+def test_aa_continue_dialog(self, result):
+		self.assertEqual(result, "My expected result")
+		# => verbose output
 ```
