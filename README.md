@@ -97,15 +97,14 @@ OK
 Since the Python test runner executes tests alphabetical by test name, you'll want to ensure that any utterances in a dialog having an alphabetical naming convention.
 
 ```
-@test_utterance('open my skill', debug=True)
+@test_utterance('open my skill')
 def test_a_begin_dialog(self, result):
-		self.assertEqual(result, "My expected result")
-		# => verbose output
+    self.assertEqual(result, "My expected result")
+    # => verbose output
 ```
 
 ```
-@test_utterance('do something with my skill', debug=True)
+@test_utterance('do something with my skill')
 def test_aa_continue_dialog(self, result):
-		self.assertEqual(result, "My expected result")
-		# => verbose output
+    self.assertEqual(result, "My expected result")
 ```
