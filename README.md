@@ -1,6 +1,6 @@
 # [WIP] interview-alexa
 
-A Pyhton testing framework for Alexa using `ask-cli`
+A Python testing framework for Alexa using `ask-cli`
 
 TODO [Pipify](http://the-hitchhikers-guide-to-packaging.readthedocs.io/en/latest/creation.html)
 
