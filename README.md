@@ -66,3 +66,13 @@ From the command line:
 cd My_Skill
 python tests.py
 ```
+Should result in something like:
+
+```
+✓ Simulation created for simulation id: 1234-5679-910112-abc-123
+◠ Waiting for simulation response.
+----------------------------------------------------------------------
+Ran 1 test in 5.848s
+
+OK
+```
