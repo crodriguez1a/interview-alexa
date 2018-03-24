@@ -67,10 +67,10 @@ if __name__ == '__main__':
 - **`debug=True`**
 
 ```
-  	@test_utterance('open my skill', debug=True)
-    def test_launch_intent(self, result):
-        self.assertEqual(result, "My expected result")
-        # => verbose output
+@test_utterance('open my skill', debug=True)
+def test_launch_intent(self, result):
+    self.assertEqual(result, "My expected result")
+    # => verbose output
 
 ```
 
