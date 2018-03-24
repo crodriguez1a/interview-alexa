@@ -36,7 +36,13 @@ TODO [Pipify](http://the-hitchhikers-guide-to-packaging.readthedocs.io/en/latest
 
 Inside the directory of your cloned skill, create a file called `tests.py`
 
-In a `test.py` file:
+```
+project
+│
+└───My_Cloned_Skill
+	│
+	└───tests.py
+```
 
 ```
 import unittest
