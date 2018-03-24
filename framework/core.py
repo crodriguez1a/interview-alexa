@@ -1,9 +1,5 @@
-import os
 import subprocess
 import json
-
-SKILL_PATH = os.environ.get('SKILL_PATH')
-
 
 def test_utterance(text):
     """
