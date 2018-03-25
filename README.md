@@ -94,7 +94,7 @@ OK
 
 **Dialog Testings**
 
-Since the Python test runner executes tests alphabetical by test name, you'll want to ensure that any utterances in a dialog having an alphabetical naming convention.
+Since the Python test runner executes tests alphabetical by test name, you'll want to ensure that any tests that simulate dialog are named alphabetically.
 
 ```
 @test_utterance('open my skill')
