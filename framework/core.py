@@ -2,7 +2,6 @@ import subprocess
 import json
 import os
 import re
-import pickle
 
 def ask_simulate(text, debug):
     """
@@ -90,7 +89,7 @@ def parse_ask_response(result):
 
 def parse_local_response(result):
     """
-    Parse response shape from python-lambda-local
+    Parse response shape from `python-lambda-local`
     """
     try:
         # standard response
@@ -101,7 +100,7 @@ def parse_local_response(result):
 
 def ask_local(context):
     """
-    Run python-lambda-local against recorded events
+    Run `python-lambda-local` against recorded events
     """
     id = context.id()
     event_path = 'tmp/{}.json'.format(id)
@@ -115,12 +114,12 @@ def ask_local(context):
         result = re.findall(r'RESULT\:([\s\S]*?)\[root', bytes_response)
 
         if result:
-            obj = eval(result[0])
-
+            result_dict = eval(result[0])
+        
             try:
-                return obj['response']['outputSpeech']['text']
+                return result_dict['response']['outputSpeech']['text']
             except:
-                return obj['response']
+                return result_dict['response']
 
     except:
         raise Exception(local_response.stdout)
