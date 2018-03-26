@@ -2,10 +2,11 @@ import subprocess
 import json
 import os
 import re
+import pickle
 
 def ask_simulate(text, debug):
     """
-
+    Run `ask simulate`
     """
     commands = ['ask', 'simulate', '--text', text]
 
@@ -22,7 +23,7 @@ def ask_simulate(text, debug):
 
 def record_events(id, result):
     """
-
+    Write event json response to tmp file
     """
     try:
         event_json = result['skillExecutionInfo']['invocationRequest']['body']
@@ -44,19 +45,29 @@ def record_events(id, result):
 
 def localize(context, lambda_path='lambda/custom/handler.py'):
     """
-
+    Signal that local tests should be
+    executed against recorded events
     """
     context.local = True
     context.lambda_path = lambda_path
 
+def record(context):
+    """
+    Signal that events should be recorded
+    """
+    context.record = True
+
 def has_events():
     """
-
+    Signal if events were recorded
     """
     for dirpath, dirnames, files in os.walk('tmp'):
         return files
 
 def parse_response(response):
+    """
+    Parse common response object
+    """
     try:
         # standard response
         return response['outputSpeech']['text']
@@ -66,6 +77,9 @@ def parse_response(response):
 
 
 def parse_ask_response(result):
+    """
+    Parse response shape from ask cli
+    """
     try:
         # common response node
         response = result['skillExecutionInfo']['invocationResponse']['body']['response']
@@ -75,6 +89,9 @@ def parse_ask_response(result):
         return result['error']['message']
 
 def parse_local_response(result):
+    """
+    Parse response shape from python-lambda-local
+    """
     try:
         # standard response
         return response['outputSpeech']['text']
@@ -84,21 +101,29 @@ def parse_local_response(result):
 
 def ask_local(context):
     """
-
+    Run python-lambda-local against recorded events
     """
     id = context.id()
     event_path = 'tmp/{}.json'.format(id)
     commands = ['python-lambda-local', '-f', 'lambda_handler', context.lambda_path, event_path]
+    local_response = subprocess.run(commands, stdout=subprocess.PIPE)
 
     try:
-        local_response = subprocess.run(commands, stdout=subprocess.PIPE)
-        stdout_bytes = local_response.stdout.decode('utf8').replace("'", '"')
-        result = re.findall(r'response\"\: \{([\s\S]*?)\}', stdout_bytes)
-        print(result)
+        # decode bytes
+        bytes_response = local_response.stdout.decode('utf8')
+        # extract result node
+        result = re.findall(r'RESULT\:([\s\S]*?)\[root', bytes_response)
 
-        return parse_response(response_json)
-    except Exception as e:
-        raise e
+        if result:
+            obj = eval(result[0])
+
+            try:
+                return obj['response']['outputSpeech']['text']
+            except:
+                return obj['response']
+
+    except:
+        raise Exception(local_response.stdout)
 
 def test_utterance(text, debug=False):
     """
@@ -112,26 +137,28 @@ def test_utterance(text, debug=False):
     def _outer_wrapper(wrapped_function):
         def _wrapper(*args, **kwargs):
             context = args[0]
+            record = context.__dict__.get('record', None)
+            local = context.__dict__.get('local', None)
+
             ask_says = None
 
-            if not context.record and context.local and has_events():
-                return ask_local(context)
-            elif context.record: # TODO context.record?
+            if not record and local and has_events():
+                ask_says = ask_local(context)
+                return wrapped_function(context, ask_says)
+
+            elif record: # TODO context.record?
                 ask_json = ask_simulate(text, debug)
                 result = ask_json['result']
                 record_events(context.id(), result) # TODO make the consumer aware of localization
                 ask_says = parse_ask_response(result)
-
                 return wrapped_function(context, ask_says)
+
             else:
                 ask_json = ask_simulate(text, debug)
                 result = ask_json['result'] # REVIEW Make this available to consumer?
                 ask_says = parse_ask_response(result)
-
                 return wrapped_function(context, ask_says)
 
-            result = wrapped_function(context, ask_says)
-
-            return result
+            return wrapped_function(context, ask_says)
         return _wrapper
     return _outer_wrapper
