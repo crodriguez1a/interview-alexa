@@ -32,7 +32,7 @@ def record_events(id, result):
             try:
                 os.makedirs('tmp')
             except Exception as e:
-                print(e)
+                raise e
 
         # write event_json to file with the same name as test module and function
         file = open('tmp/{}.json'.format(id), 'w+')
@@ -46,6 +46,10 @@ def localize(context, lambda_path='lambda/custom/handler.py'):
     """
     Signal that local tests should be
     executed against recorded events
+
+    Usage:
+    def setUp(self):
+        localize(self)
     """
     context.local = True
     context.lambda_path = lambda_path
@@ -53,6 +57,10 @@ def localize(context, lambda_path='lambda/custom/handler.py'):
 def record(context):
     """
     Signal that events should be recorded
+
+    Usage:
+    def setUp(self):
+        record(self)
     """
     context.record = True
 
@@ -73,7 +81,6 @@ def parse_response(response):
     except:
         # delegated directive response
         return response['directives'] # TODO handle this better
-
 
 def parse_ask_response(result):
     """
@@ -115,7 +122,7 @@ def ask_local(context):
 
         if result:
             result_dict = eval(result[0])
-        
+
             try:
                 return result_dict['response']['outputSpeech']['text']
             except:
@@ -141,11 +148,17 @@ def test_utterance(text, debug=False):
 
             ask_says = None
 
-            if not record and local and has_events():
-                ask_says = ask_local(context)
-                return wrapped_function(context, ask_says)
+            if not record and local:
+                if has_events():
+                    ask_says = ask_local(context)
+                    return wrapped_function(context, ask_says)
+                else:
+                    raise Exception('No events were recorded. Before localizing, call the `record()` function in your test module\'s `setUp` method ')
 
-            elif record: # TODO context.record?
+            elif record:
+                if local:
+                    raise Expection('Cannot record in localized mode. Comment out the `localize()` method in your test module\'s `setUp` method')
+
                 ask_json = ask_simulate(text, debug)
                 result = ask_json['result']
                 record_events(context.id(), result) # TODO make the consumer aware of localization
