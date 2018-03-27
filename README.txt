@@ -1,4 +1,3 @@
-===============
 Interview Alexa
 ===============
 
@@ -156,8 +155,8 @@ Once you've run your test with **record mode** on, you should see a ``tmp`` fold
 			└───tests.py
 			│
 			└───tmp
-					│
-					└───__main__.TestingAllTheThings.test_aa.json
+        │
+        └───__main__.TestingAllTheThings.test_aa.json
 
 
 

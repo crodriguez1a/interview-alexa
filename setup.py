@@ -5,7 +5,7 @@ setup(
     version='0.1.0',
     author='Carlos E. Rodriguez',
     author_email='crodriguez1a@gmail.com',
-    packages=['interview_alexa', 'interview_alexa.test'],
+    packages=['interview_alexa', 'tests'],
     scripts=['bin/sample_test.py'],
     url='http://pypi.python.org/pypi/InterviewAlexa/',
     license='LICENSE.txt',

@@ -3,3 +3,5 @@ My_Cookbook
 .env
 __pycache__
 .DS_Store
+dist
+MANIFEST
