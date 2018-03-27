@@ -10,8 +10,9 @@ setup(
     url='http://pypi.python.org/pypi/InterviewAlexa/',
     license='LICENSE.txt',
     description='A Python Testing Framework for Alexa using ASK CLI',
-    long_description=open('README.txt').read(),
+    long_description=open('README.rst').read(),
     install_requires=[
         "python-lambda-local >= 0.1.5"
     ],
+    keywords='alexa aws aws-cli lambda lex'
 )

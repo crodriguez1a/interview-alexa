@@ -5,16 +5,27 @@ A Python Testing Framework for Alexa using ASK CLI
 
 Typical usage:
 
+<<<<<<< Updated upstream
 ```python
 import unittest
 from interview_alexa import test_utterance
+=======
+    import unittest
+    from interview_alexa import say
+>>>>>>> Stashed changes
 
 
 class TestingAllTheThings(unittest.TestCase):
 
+<<<<<<< Updated upstream
 @test_utterance('open my skill')
 def test_launch_intent(self, result):
     self.assertEqual(result, 'My expected result')
+=======
+        @say('open my skill')
+        def test_launch_intent(self, result):
+            self.assertEqual(result, 'My expected result')
+>>>>>>> Stashed changes
 
 if __name__ == '__main__':
 unittest.main()
@@ -67,6 +78,11 @@ project
 import unittest
 from interview_alexa import test_utterance
 
+<<<<<<< Updated upstream
+=======
+		import unittest
+		from interview_alexa import say
+>>>>>>> Stashed changes
 
 class TestingAllTheThings(unittest.TestCase):
 
@@ -74,6 +90,16 @@ class TestingAllTheThings(unittest.TestCase):
     def test_launch_intent(self, result):
 	self.assertEqual(result, "My expected result")
 
+<<<<<<< Updated upstream
+=======
+		    @say('open my skill')
+		    def test_launch_intent(self, result):
+		        self.assertEqual(result, "My expected result")
+
+
+		if __name__ == '__main__':
+		    unittest.main()
+>>>>>>> Stashed changes
 
 if __name__ == '__main__':
     unittest.main()
@@ -83,10 +109,18 @@ if __name__ == '__main__':
 
 - **`debug=True`**
 
+<<<<<<< Updated upstream
 ```python
 @test_utterance('open my skill', debug=True)
 def test_launch_intent(self, result):
     self.assertEqual(result, "My expected result")
+=======
+		@say('open my skill', debug=True)
+		def test_launch_intent(self, result):
+		    self.assertEqual(result, "My expected result")
+
+		    # => will produce a verbose output from ask-cli
+>>>>>>> Stashed changes
 
     # => will produce a verbose output from ask-cli
 ```
@@ -114,6 +148,7 @@ OK
 
 Since the Python test runner executes tests alphabetical by test name, you'll want to ensure that any tests that simulate dialog are named alphabetically.
 
+<<<<<<< Updated upstream
 ```python
 @test_utterance('open my skill')
 def test_aa__begin_dialog(self, result):
@@ -123,15 +158,30 @@ def test_aa__begin_dialog(self, result):
 def test_ab__continue_dialog(self, result):
     self.assertEqual(result, "My expected result")
 ```
+=======
+		@say('open my skill')
+		def test_aa__begin_dialog(self, result):
+		    self.assertEqual(result, "My expected result")
+
+		@say('do something with my skill')
+		def test_ab__continue_dialog(self, result):
+		    self.assertEqual(result, "My expected result")
+>>>>>>> Stashed changes
 
 
 If the expected result is a delegated dialog, your response may not include any output speech. In that case, you may want to ``pass``:
 
+<<<<<<< Updated upstream
 ```python
 @test_utterance('do something with my skill')
 def test_ac__delegated_dialog(self, result):
     pass
 ```
+=======
+		@say('do something with my skill')
+		def test_ac__delegated_dialog(self, result):
+		    pass
+>>>>>>> Stashed changes
 
 
 **Local Testing**
@@ -142,9 +192,14 @@ In order to do so, we use ``ask-cli`` to record your request events, and ``pytho
 
 First, make sure to import the record and localize functions. Then run record in your tests module's ``setUp`` method:
 
+<<<<<<< Updated upstream
 ```python
 import unittest
 from interview_alexa import test_utterance, record, localize
+=======
+    import unittest
+    from interview_alexa import say, record, localize
+>>>>>>> Stashed changes
 
 
 class TestingAllTheThings(unittest.TestCase):
@@ -152,9 +207,15 @@ class TestingAllTheThings(unittest.TestCase):
 def setUp(self):
     record(self)
 
+<<<<<<< Updated upstream
 @test_utterance('open my skill')
 def test_aa__launch_intent(self, result):
     self.assertEqual(result, 'My expected result')
+=======
+        @say('open my skill')
+        def test_aa__launch_intent(self, result):
+            self.assertEqual(result, 'My expected result')
+>>>>>>> Stashed changes
 
 ...
 ```
@@ -175,9 +236,15 @@ project
 
 Now that you have some events recorded locally, you can run your tests in **localize mode**, and run your tests again with ``python tests.py`` as you normally would.
 
+<<<<<<< Updated upstream
 ```python
 import unittest
 from interview_alexa import test_utterance, record, localize
+=======
+
+    import unittest
+    from interview_alexa import say, record, localize
+>>>>>>> Stashed changes
 
 
 class TestingAllTheThings(unittest.TestCase):

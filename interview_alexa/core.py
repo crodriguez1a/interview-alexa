@@ -131,11 +131,11 @@ def ask_local(context):
     except:
         raise Exception(local_response.stdout)
 
-def test_utterance(text, debug=False):
+def say(text, debug=False):
     """
     Usage:
 
-    @test_utterance("Alexa, open my skill")
+    @say("Alexa, open my skill")
     def my_test(self, result):
         self.assertEqual(result, 'My exected result')
 

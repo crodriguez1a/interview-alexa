@@ -6,12 +6,12 @@ A Python Testing Framework for Alexa using ASK CLI
 Typical usage:
 
     import unittest
-    from interview_alexa import test_utterance
+    from interview_alexa import say
 
 
     class TestingAllTheThings(unittest.TestCase):
 
-        @test_utterance('open my skill')
+        @say('open my skill')
         def test_launch_intent(self, result):
             self.assertEqual(result, 'My expected result')
 
@@ -60,12 +60,12 @@ Inside the directory of your cloned skill, create a file called ``tests.py``
 
 
 		import unittest
-		from interview_alexa import test_utterance
+		from interview_alexa import say
 
 
 		class TestingAllTheThings(unittest.TestCase):
 
-		    @test_utterance('open my skill')
+		    @say('open my skill')
 		    def test_launch_intent(self, result):
 		        self.assertEqual(result, "My expected result")
 
@@ -78,7 +78,7 @@ Inside the directory of your cloned skill, create a file called ``tests.py``
 
 - **`debug=True`**
 
-		@test_utterance('open my skill', debug=True)
+		@say('open my skill', debug=True)
 		def test_launch_intent(self, result):
 		    self.assertEqual(result, "My expected result")
 
@@ -106,18 +106,18 @@ Inside the directory of your cloned skill, create a file called ``tests.py``
 
 Since the Python test runner executes tests alphabetical by test name, you'll want to ensure that any tests that simulate dialog are named alphabetically.
 
-		@test_utterance('open my skill')
+		@say('open my skill')
 		def test_aa__begin_dialog(self, result):
 		    self.assertEqual(result, "My expected result")
 
-		@test_utterance('do something with my skill')
+		@say('do something with my skill')
 		def test_ab__continue_dialog(self, result):
 		    self.assertEqual(result, "My expected result")
 
 
 If the expected result is a delegated dialog, your response may not include any output speech. In that case, you may want to ``pass``:
 
-		@test_utterance('do something with my skill')
+		@say('do something with my skill')
 		def test_ac__delegated_dialog(self, result):
 		    pass
 
@@ -131,7 +131,7 @@ In order to do so, we use ``ask-cli`` to record your request events, and ``pytho
 First, make sure to import the record and localize functions. Then run record in your tests module's ``setUp`` method:
 
     import unittest
-    from interview_alexa import test_utterance, record, localize
+    from interview_alexa import say, record, localize
 
 
     class TestingAllTheThings(unittest.TestCase):
@@ -139,7 +139,7 @@ First, make sure to import the record and localize functions. Then run record in
         def setUp(self):
         record(self)
 
-        @test_utterance('open my skill')
+        @say('open my skill')
         def test_aa__launch_intent(self, result):
             self.assertEqual(result, 'My expected result')
 
@@ -155,8 +155,8 @@ Once you've run your test with **record mode** on, you should see a ``tmp`` fold
 			└───tests.py
 			│
 			└───tmp
-        │
-        └───__main__.TestingAllTheThings.test_aa.json
+			  │
+			  └───__main__.TestingAllTheThings.test_aa.json
 
 
 
@@ -164,7 +164,7 @@ Now that you have some events recorded locally, you can run your tests in **loca
 
 
     import unittest
-    from interview_alexa import test_utterance, record, localize
+    from interview_alexa import say, record, localize
 
 
     class TestingAllTheThings(unittest.TestCase):

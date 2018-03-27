@@ -1,12 +1,12 @@
 import unittest
-from interview_alexa import test_utterance
+from interview_alexa import say
 
 
 class TestInterviewAlexa(unittest.TestCase):
 
     def test_decorator(self):
 
-        @test_utterance('hello world')
+        @say('hello world')
         def foo(self, result):
             self.assertIsNone(result)
 
