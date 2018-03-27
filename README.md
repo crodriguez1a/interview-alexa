@@ -36,13 +36,16 @@ Prerequisites
 
 * Export environment variables:
 
-    	export SKILL_ID=amzn1.ask.skill.12345
-    	export ASK_DEFAULT_DEVICE_LOCALE=en-US
+```bash
+export SKILL_ID=amzn1.ask.skill.12345
+export ASK_DEFAULT_DEVICE_LOCALE=en-US
+```
 
 * Clone your existing Alexa skill:
 
-    	ask clone echo SKILL_ID
-
+```bash
+ask clone echo SKILL_ID
+```
 
 
 Usage
@@ -50,13 +53,13 @@ Usage
 
 Inside the directory of your cloned skill, create a file called ``tests.py``
 
-
-		project
-		│
-		└───My_Cloned_Skill
-			│
-			└───tests.py
-
+```bash
+project
+│
+└───My_Cloned_Skill
+	│
+	└───tests.py
+```
 
 **Writing Tests:**
 
@@ -90,20 +93,22 @@ def test_launch_intent(self, result):
 
 **Simple Testing**:
 
-
-		cd My_Skill
-		python tests.py
+```bash
+cd My_Skill
+python tests.py
+```
 
 --
+```bash
+A passing test would output something like:
 
-		A passing test would output something like:
+✓ Simulation created for simulation id: 1234-5679-910112-abc-123
+◠ Waiting for simulation response.
+----------------------------------------------------------------------
+Ran 1 test in 5.848s
 
-		✓ Simulation created for simulation id: 1234-5679-910112-abc-123
-		◠ Waiting for simulation response.
-		----------------------------------------------------------------------
-		Ran 1 test in 5.848s
-
-		OK
+OK
+```
 
 **Dialog Testing**
 
@@ -156,18 +161,17 @@ def test_aa__launch_intent(self, result):
 
 Once you've run your test with **record mode** on, you should see a ``tmp`` folder in your working directory with some JSON files with the same names as your tests.
 
-
-		project
-		│
-		└───My_Cloned_Skill
-			│
-			└───tests.py
-			│
-			└───tmp
-			  │
-			  └───__main__.TestingAllTheThings.test_aa.json
-
-
+```bash
+project
+│
+└───My_Cloned_Skill
+	│
+	└───tests.py
+	│
+	└───tmp
+	  │
+	  └───__main__.TestingAllTheThings.test_aa.json
+```
 
 Now that you have some events recorded locally, you can run your tests in **localize mode**, and run your tests again with ``python tests.py`` as you normally would.
 
