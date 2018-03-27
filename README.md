@@ -86,7 +86,7 @@ if __name__ == '__main__':
 @say('open my skill', debug=True)
 def test_launch_intent(self, result):
     self.assertEqual(result, "My expected result")
-    
+
     # => will produce a verbose output from ask-cli
 ```
 
@@ -179,9 +179,9 @@ from interview_alexa import say, record, localize
 
 class TestingAllTheThings(unittest.TestCase):
 
-def setUp(self):
-    # record(self)
-    localize(self)
+  def setUp(self):
+      # record(self)
+      localize(self)
 
 ...
 ```
