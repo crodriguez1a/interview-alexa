@@ -1,5 +1,5 @@
 import unittest
-from core import test_utterance
+from interview_alexa import test_utterance
 
 
 class TestingAllTheThings(unittest.TestCase):
