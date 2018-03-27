@@ -150,7 +150,7 @@ from interview_alexa import test_utterance, record, localize
 class TestingAllTheThings(unittest.TestCase):
 
 def setUp(self):
-record(self)
+    record(self)
 
 @test_utterance('open my skill')
 def test_aa__launch_intent(self, result):
