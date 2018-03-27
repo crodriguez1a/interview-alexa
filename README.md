@@ -12,9 +12,9 @@ from interview_alexa import say
 
 class TestingAllTheThings(unittest.TestCase):
 
-@say('open my skill')
-def test_launch_intent(self, result):
-    self.assertEqual(result, 'My expected result')
+    @say('open my skill')
+    def test_launch_intent(self, result):
+        self.assertEqual(result, 'My expected result')
 
 if __name__ == '__main__':
 unittest.main()
@@ -146,12 +146,12 @@ from interview_alexa import say, record, localize
 
 class TestingAllTheThings(unittest.TestCase):
 
-def setUp(self):
-    record(self)
+    def setUp(self):
+        record(self)
 
-@say('open my skill')
-def test_aa__launch_intent(self, result):
-    self.assertEqual(result, 'My expected result')
+    @say('open my skill')
+    def test_aa__launch_intent(self, result):
+        self.assertEqual(result, 'My expected result')
 
 ...
 ```
