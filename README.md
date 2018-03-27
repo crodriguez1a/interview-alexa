@@ -5,18 +5,20 @@ A Python Testing Framework for Alexa using ASK CLI
 
 Typical usage:
 
-    import unittest
-    from interview_alexa import test_utterance
+```python
+import unittest
+from interview_alexa import test_utterance
 
 
-    class TestingAllTheThings(unittest.TestCase):
+class TestingAllTheThings(unittest.TestCase):
 
-        @test_utterance('open my skill')
-        def test_launch_intent(self, result):
-            self.assertEqual(result, 'My expected result')
+@test_utterance('open my skill')
+def test_launch_intent(self, result):
+    self.assertEqual(result, 'My expected result')
 
-	if __name__ == '__main__':
-    unittest.main()
+if __name__ == '__main__':
+unittest.main()
+```
 
 Prerequisites
 =============
@@ -58,32 +60,33 @@ Inside the directory of your cloned skill, create a file called ``tests.py``
 
 **Writing Tests:**
 
-
-		import unittest
-		from interview_alexa import test_utterance
-
-
-		class TestingAllTheThings(unittest.TestCase):
-
-		    @test_utterance('open my skill')
-		    def test_launch_intent(self, result):
-		        self.assertEqual(result, "My expected result")
+```python
+import unittest
+from interview_alexa import test_utterance
 
 
-		if __name__ == '__main__':
-		    unittest.main()
+class TestingAllTheThings(unittest.TestCase):
 
+    @test_utterance('open my skill')
+    def test_launch_intent(self, result):
+	self.assertEqual(result, "My expected result")
+
+
+if __name__ == '__main__':
+    unittest.main()
+```
 
 **Options:**
 
 - **`debug=True`**
 
-		@test_utterance('open my skill', debug=True)
-		def test_launch_intent(self, result):
-		    self.assertEqual(result, "My expected result")
+```python
+@test_utterance('open my skill', debug=True)
+def test_launch_intent(self, result):
+    self.assertEqual(result, "My expected result")
 
-		    # => will produce a verbose output from ask-cli
-
+    # => will produce a verbose output from ask-cli
+```
 
 **Simple Testing**:
 
@@ -106,20 +109,24 @@ Inside the directory of your cloned skill, create a file called ``tests.py``
 
 Since the Python test runner executes tests alphabetical by test name, you'll want to ensure that any tests that simulate dialog are named alphabetically.
 
-		@test_utterance('open my skill')
-		def test_aa__begin_dialog(self, result):
-		    self.assertEqual(result, "My expected result")
+```python
+@test_utterance('open my skill')
+def test_aa__begin_dialog(self, result):
+    self.assertEqual(result, "My expected result")
 
-		@test_utterance('do something with my skill')
-		def test_ab__continue_dialog(self, result):
-		    self.assertEqual(result, "My expected result")
+@test_utterance('do something with my skill')
+def test_ab__continue_dialog(self, result):
+    self.assertEqual(result, "My expected result")
+```
 
 
 If the expected result is a delegated dialog, your response may not include any output speech. In that case, you may want to ``pass``:
 
-		@test_utterance('do something with my skill')
-		def test_ac__delegated_dialog(self, result):
-		    pass
+```python
+@test_utterance('do something with my skill')
+def test_ac__delegated_dialog(self, result):
+    pass
+```
 
 
 **Local Testing**
@@ -130,20 +137,22 @@ In order to do so, we use ``ask-cli`` to record your request events, and ``pytho
 
 First, make sure to import the record and localize functions. Then run record in your tests module's ``setUp`` method:
 
-    import unittest
-    from interview_alexa import test_utterance, record, localize
+```python
+import unittest
+from interview_alexa import test_utterance, record, localize
 
 
-    class TestingAllTheThings(unittest.TestCase):
+class TestingAllTheThings(unittest.TestCase):
 
-        def setUp(self):
-        record(self)
+def setUp(self):
+record(self)
 
-        @test_utterance('open my skill')
-        def test_aa__launch_intent(self, result):
-            self.assertEqual(result, 'My expected result')
+@test_utterance('open my skill')
+def test_aa__launch_intent(self, result):
+    self.assertEqual(result, 'My expected result')
 
-        ...
+...
+```
 
 Once you've run your test with **record mode** on, you should see a ``tmp`` folder in your working directory with some JSON files with the same names as your tests.
 
@@ -162,15 +171,16 @@ Once you've run your test with **record mode** on, you should see a ``tmp`` fold
 
 Now that you have some events recorded locally, you can run your tests in **localize mode**, and run your tests again with ``python tests.py`` as you normally would.
 
+```python
+import unittest
+from interview_alexa import test_utterance, record, localize
 
-    import unittest
-    from interview_alexa import test_utterance, record, localize
 
+class TestingAllTheThings(unittest.TestCase):
 
-    class TestingAllTheThings(unittest.TestCase):
+def setUp(self):
+    # record(self)
+    localize(self)
 
-        def setUp(self):
-            # record(self)
-            localize(self)
-
-        ...
+...
+```
