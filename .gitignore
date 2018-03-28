@@ -6,3 +6,5 @@ __pycache__
 dist
 MANIFEST
 setup.cfg
+build
+interview_alexa.egg-info
