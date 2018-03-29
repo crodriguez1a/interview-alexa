@@ -3,135 +3,139 @@ import json
 import os
 import re
 
-def ask_simulate(text, debug):
-    """
-    Run `ask simulate`
-    """
-    commands = ['ask', 'simulate', '--text', text]
 
-    if debug:
-        commands.append('--debug')
+class InterviewAlexa(object):
+    def ask_simulate(self, text, debug):
+        """
+        Run `ask simulate`
+        """
+        commands = ['ask', 'simulate', '--text', text]
 
-    ask_simulate_response = subprocess.run(commands, stdout=subprocess.PIPE)
+        if debug:
+            commands.append('--debug')
 
-    # pass through exceptions from ask
-    try:
-        return json.loads(ask_simulate_response.stdout)
-    except:
-        raise Exception(ask_simulate_response.stdout)
+        ask_simulate_response = subprocess.run(commands, stdout=subprocess.PIPE)
 
-def record_events(id, result):
-    """
-    Write event json response to tmp file
-    """
-    try:
-        event_json = result['skillExecutionInfo']['invocationRequest']['body']
+        # pass through exceptions from ask
+        try:
+            return json.loads(ask_simulate_response.stdout)
+        except:
+            raise Exception(ask_simulate_response.stdout)
 
-        # create a tmp dir if one does not exit
-        if not os.path.isdir('tmp'):
-            try:
-                os.makedirs('tmp')
-            except Exception as e:
-                raise e
+    def record_events(self, id, result):
+        """
+        Write event json response to tmp file
+        """
+        try:
+            event_json = result['skillExecutionInfo']['invocationRequest']['body']
 
-        # write event_json to file with the same name as test module and function
-        file = open('tmp/{}.json'.format(id), 'w+')
-        with file as outfile:
-            json.dump(event_json, outfile)
+            # create a tmp dir if one does not exit
+            if not os.path.isdir('tmp'):
+                try:
+                    os.makedirs('tmp')
+                except Exception as e:
+                    raise e
 
-    except Exception as e:
-        raise e
+            # write event_json to file with the same name as test module and function
+            file = open('tmp/{}.json'.format(id), 'w+')
+            with file as outfile:
+                json.dump(event_json, outfile)
 
-def localize(context, lambda_path='lambda/custom/handler.py'):
-    """
-    Signal that local tests should be
-    executed against recorded events
+        except Exception as e:
+            raise e
 
-    Usage:
-    def setUp(self):
-        localize(self)
-    """
-    context.local = True
-    context.lambda_path = lambda_path
+    def localize(self, context, lambda_path='lambda/custom/handler.py'):
+        """
+        Signal that local tests should be
+        executed against recorded events
 
-def record(context):
-    """
-    Signal that events should be recorded
+        Usage:
+        def setUp(self):
+            localize(self)
+        """
+        context.local = True
+        context.lambda_path = lambda_path
 
-    Usage:
-    def setUp(self):
-        record(self)
-    """
-    context.record = True
+    def record(self, context):
+        """
+        Signal that events should be recorded
 
-def has_events():
-    """
-    Signal if events were recorded
-    """
-    for dirpath, dirnames, files in os.walk('tmp'):
-        return files
+        Usage:
+        def setUp(self):
+            record(self)
+        """
+        context.record = True
 
-def parse_response(response):
-    """
-    Parse common response object
-    """
-    try:
-        # standard response
-        return response['outputSpeech']['text']
-    except:
-        # delegated directive response
-        return response['directives'] # TODO handle this better
+    def has_events(self, ):
+        """
+        Signal if events were recorded
+        """
+        for dirpath, dirnames, files in os.walk('tmp'):
+            return files
 
-def parse_ask_response(result):
-    """
-    Parse response shape from ask cli
-    """
-    try:
-        # common response node
-        response = result['skillExecutionInfo']['invocationResponse']['body']['response']
-        return parse_response(response)
-    except:
-        # error response
-        return result['error']['message']
+    def parse_response(self, response):
+        """
+        Parse common response object
+        """
+        try:
+            # standard response
+            return response['outputSpeech']['text']
+        except:
+            # delegated directive response
+            return response['directives'] # TODO handle this better
 
-def parse_local_response(result):
-    """
-    Parse response shape from `python-lambda-local`
-    """
-    try:
-        # standard response
-        return response['outputSpeech']['text']
-    except:
-        # delegated directive response
-        return response['directives'] # TODO handle this better
+    def parse_ask_response(self, result):
+        """
+        Parse response shape from ask cli
+        """
+        try:
+            # common response node
+            response = result['skillExecutionInfo']['invocationResponse']['body']['response']
+            return self.parse_response(response)
+        except:
+            # alexa error response
+            return result['error']['message']
 
-def ask_local(context):
-    """
-    Run `python-lambda-local` against recorded events
-    """
-    id = context.id()
-    event_path = 'tmp/{}.json'.format(id)
-    commands = ['python-lambda-local', '-f', 'lambda_handler', context.lambda_path, event_path]
-    local_response = subprocess.run(commands, stdout=subprocess.PIPE)
+    def parse_local_response(self, result):
+        """
+        Parse response shape from `python-lambda-local`
+        """
+        try:
+            # standard response
+            return response['outputSpeech']['text']
+        except:
+            # delegated directive response
+            return response['directives'] # TODO handle this better
 
-    try:
-        # decode bytes
-        bytes_response = local_response.stdout.decode('utf8')
-        # extract result node
-        result = re.findall(r'RESULT\:([\s\S]*?)\[root', bytes_response)
+    def ask_local(self, context):
+        """
+        Run `python-lambda-local` against recorded events
+        """
+        id = context.id()
+        event_path = 'tmp/{}.json'.format(id)
+        commands = ['python-lambda-local', '-f', 'lambda_handler', context.lambda_path, event_path]
+        local_response = subprocess.run(commands, stdout=subprocess.PIPE)
 
-        if result:
-            result_dict = eval(result[0])
+        try:
+            # decode bytes
+            bytes_response = local_response.stdout.decode('utf8')
+            # extract result node
+            result = re.findall(r'RESULT\:([\s\S]*?)\[root', bytes_response)
 
-            try:
-                return result_dict['response']['outputSpeech']['text']
-            except:
-                return result_dict['response']
+            if result:
+                result_dict = eval(result[0])
 
-    except:
-        raise Exception(local_response.stdout)
+                try:
+                    return result_dict['response']['outputSpeech']['text']
+                except:
+                    return result_dict['response']
+
+        except:
+            raise Exception(local_response.stdout)
+
 
 def say(text, debug=False):
+    _ia = InterviewAlexa()
     """
     Usage:
 
@@ -149,8 +153,8 @@ def say(text, debug=False):
             ask_says = None
 
             if not record and local:
-                if has_events():
-                    ask_says = ask_local(context)
+                if _ia.has_events():
+                    ask_says = _ia.ask_local(context)
                     return wrapped_function(context, ask_says)
                 else:
                     raise Exception('No events were recorded. Before localizing, call the `record()` function in your test module\'s `setUp` method ')
@@ -159,16 +163,16 @@ def say(text, debug=False):
                 if local:
                     raise Expection('Cannot record in localized mode. Comment out the `localize()` method in your test module\'s `setUp` method')
 
-                ask_json = ask_simulate(text, debug)
+                ask_json = _ia.ask_simulate(text, debug)
                 result = ask_json['result']
-                record_events(context.id(), result) # TODO make the consumer aware of localization
-                ask_says = parse_ask_response(result)
+                _ia.record_events(context.id(), result) # TODO make the consumer aware of localization
+                ask_says = _ia.parse_ask_response(result)
                 return wrapped_function(context, ask_says)
 
             else:
-                ask_json = ask_simulate(text, debug)
+                ask_json = _ia.ask_simulate(text, debug)
                 result = ask_json['result'] # REVIEW Make this available to consumer?
-                ask_says = parse_ask_response(result)
+                ask_says = _ia.parse_ask_response(result)
                 return wrapped_function(context, ask_says)
 
             return wrapped_function(context, ask_says)
