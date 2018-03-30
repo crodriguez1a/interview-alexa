@@ -8,7 +8,7 @@ r"""
 """
 
 __title__ = 'interview-alexa'
-__version__ = '0.1.0'
+__version__ = '0.1.2'
 __author__ = 'Carlos Rodriguez'
 __license__ = 'BSD 2-Clause'
 __copyright__ = 'Copyright 2018 Carlos Rodriguez'

@@ -34,6 +34,7 @@ if sys.argv[-1] == 'publish':
     shutil.rmtree('interview-alexa.egg-info')
     sys.exit()
 
+readme = open('README.rst').read()
 
 setup(
     name='interview-alexa',
@@ -41,6 +42,8 @@ setup(
     url='https://github.com/crodriguez1a/interview-alexa',
     license='BSD',
     description='A Python Testing Framework for Alexa Skills using ASK CLI',
+    long_description=readme,
+    long_description_content_type='text/m-rst',
     author='Carlos Rodriguez',
     author_email='crodriguez1a@gmail.com',  # SEE NOTE BELOW (*)
     packages=find_packages(exclude=['tests*']),
