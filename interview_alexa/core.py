@@ -134,48 +134,54 @@ class InterviewAlexa(object):
         except:
             raise Exception(local_response.stdout)
 
+    def say(self, text, debug=False):
+        """
+        Usage:
 
-def say(text, debug=False):
-    _ia = InterviewAlexa()
-    """
-    Usage:
+        @say("Alexa, open my skill")
+        def my_test(self, result):
+            self.assertEqual(result, 'My exected result')
 
-    @say("Alexa, open my skill")
-    def my_test(self, result):
-        self.assertEqual(result, 'My exected result')
+        """
+        def _outer_wrapper(wrapped_function):
+            def _wrapper(*args, **kwargs):
+                context = args[0]
+                record = context.__dict__.get('record', None)
+                local = context.__dict__.get('local', None)
 
-    """
-    def _outer_wrapper(wrapped_function):
-        def _wrapper(*args, **kwargs):
-            context = args[0]
-            record = context.__dict__.get('record', None)
-            local = context.__dict__.get('local', None)
+                ask_says = None
 
-            ask_says = None
+                if not record and local:
+                    if self.has_events():
+                        ask_says = self.ask_local(context)
+                        return wrapped_function(context, ask_says)
+                    else:
+                        raise Exception('No events were recorded. Before localizing, call the `record()` function in your test module\'s `setUp` method ')
 
-            if not record and local:
-                if _ia.has_events():
-                    ask_says = _ia.ask_local(context)
+                elif record:
+                    if local:
+                        raise Exception('Cannot record in localized mode. Comment out the `localize()` method in your test module\'s `setUp` method')
+
+                    ask_json = self.ask_simulate(text, debug)
+                    result = ask_json['result']
+                    self.record_events(context.id(), result) # TODO make the consumer aware of localization
+                    ask_says = self.parse_ask_response(result)
                     return wrapped_function(context, ask_says)
+
                 else:
-                    raise Exception('No events were recorded. Before localizing, call the `record()` function in your test module\'s `setUp` method ')
+                    ask_json = self.ask_simulate(text, debug)
+                    result = ask_json['result'] # REVIEW Make this available to consumer?
+                    ask_says = self.parse_ask_response(result)
+                    return wrapped_function(context, ask_says)
 
-            elif record:
-                if local:
-                    raise Exception('Cannot record in localized mode. Comment out the `localize()` method in your test module\'s `setUp` method')
-
-                ask_json = _ia.ask_simulate(text, debug)
-                result = ask_json['result']
-                _ia.record_events(context.id(), result) # TODO make the consumer aware of localization
-                ask_says = _ia.parse_ask_response(result)
                 return wrapped_function(context, ask_says)
+            return _wrapper
+        return _outer_wrapper
 
-            else:
-                ask_json = _ia.ask_simulate(text, debug)
-                result = ask_json['result'] # REVIEW Make this available to consumer?
-                ask_says = _ia.parse_ask_response(result)
-                return wrapped_function(context, ask_says)
 
-            return wrapped_function(context, ask_says)
-        return _wrapper
-    return _outer_wrapper
+# public methods
+_ia = InterviewAlexa()
+
+say = _ia.say
+record = _ia.record
+localize = _ia.localize

@@ -8,7 +8,7 @@ r"""
 """
 
 __title__ = 'interview-alexa'
-__version__ = '0.1.2'
+__version__ = '0.1.3'
 __author__ = 'Carlos Rodriguez'
 __license__ = 'BSD 2-Clause'
 __copyright__ = 'Copyright 2018 Carlos Rodriguez'
@@ -16,4 +16,4 @@ __copyright__ = 'Copyright 2018 Carlos Rodriguez'
 # Version synonym
 VERSION = __version__
 
-from .core import say, InterviewAlexa
+from .core import say, record, localize, InterviewAlexa

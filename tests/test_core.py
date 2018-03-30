@@ -4,7 +4,7 @@ from urllib.error import HTTPError
 import os
 import shutil
 
-from interview_alexa import say, InterviewAlexa
+from interview_alexa import say, record, localize, InterviewAlexa
 
 class TestInterviewAlexa(unittest.TestCase):
 
@@ -105,7 +105,7 @@ class TestInterviewAlexa(unittest.TestCase):
 
     def test_recording_events(self):
         InterviewAlexa.ask_simulate = mock.MagicMock(return_value=self.ask_success)
-        InterviewAlexa.record(InterviewAlexa, self)
+        record(self)
 
         @say('hi')
         def t(self, result):
@@ -147,7 +147,7 @@ class TestInterviewAlexa(unittest.TestCase):
         self.assertEqual(self.lambda_path, 'fake_lambda.py')
 
         # tmp record
-        InterviewAlexa.record(InterviewAlexa, self)
+        record(self)
         # cannot record in localized mode
         with self.assertRaises(Exception):
             t(self)
