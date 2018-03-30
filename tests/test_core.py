@@ -133,7 +133,7 @@ class TestInterviewAlexa(unittest.TestCase):
 
     def test_localized_testing(self):
         InterviewAlexa.ask_simulate = mock.MagicMock(return_value=self.ask_success)
-        InterviewAlexa.localize(InterviewAlexa, self, 'fake_lambda.py')
+        localize(self, 'fake_lambda.py')
 
         @say('hi')
         def t(self, result):
