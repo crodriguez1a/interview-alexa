@@ -3,3 +3,8 @@ My_Cookbook
 .env
 __pycache__
 .DS_Store
+dist
+MANIFEST
+setup.cfg
+build
+interview_alexa.egg-info

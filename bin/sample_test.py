@@ -1,10 +1,10 @@
 import unittest
-from core import test_utterance
+from interview_alexa import say
 
 
 class TestingAllTheThings(unittest.TestCase):
 
-    @test_utterance('open my skill')
+    @say('open my skill')
     def test_launch_intent(self, result):
         self.assertEqual(result, "My expected result")
 
