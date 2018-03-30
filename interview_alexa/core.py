@@ -40,6 +40,7 @@ class InterviewAlexa(object):
             file = open('tmp/{}.json'.format(id), 'w+')
             with file as outfile:
                 json.dump(event_json, outfile)
+            file.close()
 
         except Exception as e:
             raise e
@@ -161,7 +162,7 @@ def say(text, debug=False):
 
             elif record:
                 if local:
-                    raise Expection('Cannot record in localized mode. Comment out the `localize()` method in your test module\'s `setUp` method')
+                    raise Exception('Cannot record in localized mode. Comment out the `localize()` method in your test module\'s `setUp` method')
 
                 ask_json = _ia.ask_simulate(text, debug)
                 result = ask_json['result']

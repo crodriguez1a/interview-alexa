@@ -1,8 +1,10 @@
 import unittest
 from unittest import mock
 from urllib.error import HTTPError
+import os
+import shutil
 
-from interview_alexa.core import say, InterviewAlexa
+from interview_alexa import say, InterviewAlexa
 
 class TestInterviewAlexa(unittest.TestCase):
 
@@ -10,6 +12,12 @@ class TestInterviewAlexa(unittest.TestCase):
         self.ask_success = {
             'result': {
                 'skillExecutionInfo': {
+                    'invocationRequest': {
+                        'body': {
+                            "version": "1.0",
+                            "session":  {}
+                        }
+                    },
                     'invocationResponse': {
                         'body': {
                             'response': {
@@ -48,6 +56,7 @@ class TestInterviewAlexa(unittest.TestCase):
         }
 
         InterviewAlexa.ask_simulate = mock.MagicMock(return_value=self.ask_success)
+
 
     def test_decorator(self):
         @say('hello world')
@@ -92,6 +101,55 @@ class TestInterviewAlexa(unittest.TestCase):
             pass
 
         with self.assertRaises(HTTPError):
+            t(self)
+
+    def test_recording_events(self):
+        InterviewAlexa.ask_simulate = mock.MagicMock(return_value=self.ask_success)
+        InterviewAlexa.record(InterviewAlexa, self)
+
+        @say('hi')
+        def t(self, result):
+            self.assertEqual(result, 'and hello to you')
+
+        t(self)
+
+        self.assertTrue(self.record)
+        # tmp directory was created
+        self.assertTrue(os.path.isdir('tmp'))
+
+        # file was written to tmp folder
+        filename = '__main__.TestInterviewAlexa.test_recording_events.json'
+        for dirpath, dirnames, files in os.walk('tmp'):
+            self.assertTrue(filename in files)
+
+        # event contents were written to file
+        contents = '{"version": "1.0", "session": {}}'
+        event_json = open('tmp/{}'.format(filename), 'r')
+        self.assertEqual(contents, event_json.read())
+        event_json.close()
+
+        shutil.rmtree('tmp')
+
+
+    def test_localized_testing(self):
+        InterviewAlexa.ask_simulate = mock.MagicMock(return_value=self.ask_success)
+        InterviewAlexa.localize(InterviewAlexa, self, 'fake_lambda.py')
+
+        @say('hi')
+        def t(self, result):
+            self.assertEqual(result, 'and hello to you')
+
+        # cannot localize in without having recorded
+        with self.assertRaises(Exception):
+            t(self)
+
+        self.assertTrue(self.local)
+        self.assertEqual(self.lambda_path, 'fake_lambda.py')
+
+        # tmp record
+        InterviewAlexa.record(InterviewAlexa, self)
+        # cannot record in localized mode
+        with self.assertRaises(Exception):
             t(self)
 
 
