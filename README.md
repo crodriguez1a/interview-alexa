@@ -3,6 +3,12 @@ Interview Alexa
 
 A Python Testing Framework for Alexa using ASK CLI
 
+Installation:
+
+```bash
+pip install interview-alexa
+```
+
 Typical usage:
 
 ```python
