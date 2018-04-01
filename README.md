@@ -1,7 +1,8 @@
-Interview Alexa
+[Interview Alexa](https://github.com/crodriguez1a/interview-alexa)
 ===============
 
 A Python Testing Framework for Alexa using ASK CLI
+
 
 Installation:
 
@@ -140,6 +141,10 @@ def test_ac__delegated_dialog(self, result):
 **Local Testing**
 
 This package takes advantage of a another great package called ``python-lambda-local`` to run tests locally.
+
+```bash
+pip install python-lambda-local
+```
 
 In order to do so, we use ``ask-cli`` to record your request events, and ``python-lambda-local`` to test against recorded events.
 
