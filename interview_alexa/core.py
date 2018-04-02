@@ -3,7 +3,6 @@ import json
 import os
 import re
 
-
 class InterviewAlexa(object):
     def ask_simulate(self, text, debug):
         """
@@ -117,14 +116,14 @@ class InterviewAlexa(object):
         commands = ['python-lambda-local', '-f', 'lambda_handler', context.lambda_path, event_path]
 
         try:
-            local_response = subprocess.run(commands, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+            local_response = subprocess.run(commands, stdout=subprocess.PIPE) #, stderr=subprocess.STDOUT)
 
             # decode bytes
             bytes_response = local_response.stdout.decode('utf8')
 
             # output stdout from python-lambda-local
             if debug:
-                print(local_response.stdout)
+                print(bytes_response)
 
             # extract result node
             result = re.findall(r'RESULT\:([\s\S]*?)\[root', bytes_response)
