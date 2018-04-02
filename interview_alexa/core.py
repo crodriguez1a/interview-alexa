@@ -3,7 +3,6 @@ import json
 import os
 import re
 
-
 class InterviewAlexa(object):
     def ask_simulate(self, text, debug):
         """
@@ -108,18 +107,24 @@ class InterviewAlexa(object):
             # delegated directive response
             return response['directives'] # TODO handle this better
 
-    def ask_local(self, context):
+    def ask_local(self, context, debug):
         """
         Run `python-lambda-local` against recorded events
         """
         id = context.id()
         event_path = 'tmp/{}.json'.format(id)
         commands = ['python-lambda-local', '-f', 'lambda_handler', context.lambda_path, event_path]
-        local_response = subprocess.run(commands, stdout=subprocess.PIPE)
 
         try:
+            local_response = subprocess.run(commands, stdout=subprocess.PIPE) #, stderr=subprocess.STDOUT)
+
             # decode bytes
             bytes_response = local_response.stdout.decode('utf8')
+
+            # output stdout from python-lambda-local
+            if debug:
+                print(bytes_response)
+
             # extract result node
             result = re.findall(r'RESULT\:([\s\S]*?)\[root', bytes_response)
 
@@ -131,8 +136,8 @@ class InterviewAlexa(object):
                 except:
                     return result_dict['response']
 
-        except:
-            raise Exception(local_response.stdout)
+        except Exception as e:
+            raise e
 
     def say(self, text, debug=False):
         """
@@ -153,7 +158,7 @@ class InterviewAlexa(object):
 
                 if not record and local:
                     if self.has_events():
-                        ask_says = self.ask_local(context)
+                        ask_says = self.ask_local(context, debug)
                         return wrapped_function(context, ask_says)
                     else:
                         raise Exception('No events were recorded. Before localizing, call the `record()` function in your test module\'s `setUp` method ')

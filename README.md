@@ -192,7 +192,7 @@ class TestingAllTheThings(unittest.TestCase):
 
   def setUp(self):
       # record(self)
-      localize(self)
+      localize(self, 'path/to/lambda/handler.py') # Default is lambda/custom/handler.py
 
 ...
 ```
