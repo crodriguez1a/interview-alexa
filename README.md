@@ -1,6 +1,8 @@
 [Interview Alexa](https://github.com/crodriguez1a/interview-alexa)
 ===============
 
+[![Downloads](http://pepy.tech/badge/interview-alexa)](http://pepy.tech/project/interview-alexa)
+
 A Python Testing Framework for Alexa using ASK CLI
 
 
