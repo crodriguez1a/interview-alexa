@@ -5,6 +5,7 @@ python:
 virtualenv:
     system_site_package: true
 script:
+ - mkdir tmp
  - python -m unittest discover;
 notifications:
   email:
