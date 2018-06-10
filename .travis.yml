@@ -5,12 +5,18 @@ python:
 virtualenv:
     system_site_package: true
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> f1cec9968a4573999758d6b231a0b28a186f5b39
 before_install:
  - pip install -r requirements.txt
 install:
     make build
+<<<<<<< HEAD
 >>>>>>> first pass with travis
+=======
+>>>>>>> f1cec9968a4573999758d6b231a0b28a186f5b39
 script:
  - python -m unittest discover;
 notifications:
