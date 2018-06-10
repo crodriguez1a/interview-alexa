@@ -139,7 +139,7 @@ class TestInterviewAlexa(unittest.TestCase):
         def t(self, result):
             self.assertEqual(result, 'and hello to you')
 
-        # cannot localize in without having recorded
+        # cannot localize without having recorded
         with self.assertRaises(Exception):
             t(self)
 
@@ -151,10 +151,6 @@ class TestInterviewAlexa(unittest.TestCase):
         # cannot record in localized mode
         with self.assertRaises(Exception):
             t(self)
-
-
-
-
 
 
 if __name__ == '__main__':

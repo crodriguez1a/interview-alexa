@@ -30,16 +30,15 @@ class InterviewAlexa(object):
 
             # create a tmp dir if one does not exit
             if not os.path.isdir('tmp'):
+
                 try:
                     os.makedirs('tmp')
                 except Exception as e:
                     raise e
 
             # write event_json to file with the same name as test module and function
-            file = open('tmp/{}.json'.format(id), 'w+')
-            with file as outfile:
-                json.dump(event_json, outfile)
-            file.close()
+            with open('tmp/{}.json'.format(id), 'w+') as eventfile:
+                json.dump(event_json, eventfile)
 
         except Exception as e:
             raise e
@@ -70,6 +69,9 @@ class InterviewAlexa(object):
         """
         Signal if events were recorded
         """
+        # Code-Heads Club
+        # Multiple Assignment | http://treyhunner.com/2018/03/tuple-unpacking-improves-python-code-readability/
+        # Generator Object | https://jeffknupp.com/blog/2013/04/07/improve-your-python-yield-and-generators-explained/
         for dirpath, dirnames, files in os.walk('tmp'):
             return files
 
